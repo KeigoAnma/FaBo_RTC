@@ -1,0 +1,54 @@
+# Temperature CMake config file
+#
+# This file sets the following variables:
+# Temperature_FOUND - Always TRUE.
+# Temperature_INCLUDE_DIRS - Directories containing the Temperature include files.
+# Temperature_IDL_DIRS - Directories containing the Temperature IDL files.
+# Temperature_LIBRARIES - Libraries needed to use Temperature.
+# Temperature_DEFINITIONS - Compiler flags for Temperature.
+# Temperature_VERSION - The version of Temperature found.
+# Temperature_VERSION_MAJOR - The major version of Temperature found.
+# Temperature_VERSION_MINOR - The minor version of Temperature found.
+# Temperature_VERSION_REVISION - The revision version of Temperature found.
+# Temperature_VERSION_CANDIDATE - The candidate version of Temperature found.
+
+message(STATUS "Found Temperature-@PROJECT_VERSION@")
+set(Temperature_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Temperature_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Temperature_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Temperature_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Temperature_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Temperature_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Temperature_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Temperature_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Temperature_VERSION @PROJECT_VERSION@)
+set(Temperature_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Temperature_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Temperature_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Temperature_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+

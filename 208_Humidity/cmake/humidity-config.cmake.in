@@ -1,0 +1,54 @@
+# Humidity CMake config file
+#
+# This file sets the following variables:
+# Humidity_FOUND - Always TRUE.
+# Humidity_INCLUDE_DIRS - Directories containing the Humidity include files.
+# Humidity_IDL_DIRS - Directories containing the Humidity IDL files.
+# Humidity_LIBRARIES - Libraries needed to use Humidity.
+# Humidity_DEFINITIONS - Compiler flags for Humidity.
+# Humidity_VERSION - The version of Humidity found.
+# Humidity_VERSION_MAJOR - The major version of Humidity found.
+# Humidity_VERSION_MINOR - The minor version of Humidity found.
+# Humidity_VERSION_REVISION - The revision version of Humidity found.
+# Humidity_VERSION_CANDIDATE - The candidate version of Humidity found.
+
+message(STATUS "Found Humidity-@PROJECT_VERSION@")
+set(Humidity_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Humidity_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Humidity_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Humidity_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Humidity_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Humidity_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Humidity_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Humidity_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Humidity_VERSION @PROJECT_VERSION@)
+set(Humidity_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Humidity_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Humidity_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Humidity_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+

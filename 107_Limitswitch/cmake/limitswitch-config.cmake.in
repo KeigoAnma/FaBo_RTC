@@ -1,0 +1,54 @@
+# Limitswitch CMake config file
+#
+# This file sets the following variables:
+# Limitswitch_FOUND - Always TRUE.
+# Limitswitch_INCLUDE_DIRS - Directories containing the Limitswitch include files.
+# Limitswitch_IDL_DIRS - Directories containing the Limitswitch IDL files.
+# Limitswitch_LIBRARIES - Libraries needed to use Limitswitch.
+# Limitswitch_DEFINITIONS - Compiler flags for Limitswitch.
+# Limitswitch_VERSION - The version of Limitswitch found.
+# Limitswitch_VERSION_MAJOR - The major version of Limitswitch found.
+# Limitswitch_VERSION_MINOR - The minor version of Limitswitch found.
+# Limitswitch_VERSION_REVISION - The revision version of Limitswitch found.
+# Limitswitch_VERSION_CANDIDATE - The candidate version of Limitswitch found.
+
+message(STATUS "Found Limitswitch-@PROJECT_VERSION@")
+set(Limitswitch_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Limitswitch_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Limitswitch_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Limitswitch_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Limitswitch_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Limitswitch_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Limitswitch_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Limitswitch_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Limitswitch_VERSION @PROJECT_VERSION@)
+set(Limitswitch_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Limitswitch_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Limitswitch_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Limitswitch_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
