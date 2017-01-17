@@ -16,7 +16,7 @@ sys.path.append(".")
 # Import RTM module
 import RTC
 import OpenRTM_aist
-
+import spidev
 
 # Import Service implementation class
 # <rtc-template block="service_impl">
@@ -54,17 +54,21 @@ analogtemp_spec = ["implementation_id", "AnalogTemp",
 # @brief ModuleDescription
 # 
 # #108 Temperature(Analog)
-	sensor : LM61CIZ
-	range: -30℃ to 100℃
-	Connect: Analog
+#	sensor : LM61CIZ
+#	range: -30℃ to 100℃
+#	Connect: Analog
 # 
 # Out: Temperature(-30℃<->100℃)
-	error: ±4℃(Max)
+#	error: ±4℃(Max)
 # 
 # sensor get analog value(0 to 1023), program convert this value to temperature
-	value.
+#	value.
 # 
 # 
+
+
+#def method
+
 class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 	
 	##
@@ -74,8 +78,10 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 	def __init__(self, manager):
 		OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
 
-		temp_arg = [None] * ((len(RTC._d_TimedShort) - 4) / 2)
-		self._d_temp = RTC.TimedShort(*temp_arg)
+		#temp_arg = [None] * ((len(RTC._d_TimedShort) - 4) / 2)
+		#self._d_temp = RTC.TimedShort(*temp_arg)
+
+                self._d_temp = RTC.TimedShort(RTC.Time(0,0),0)
 		"""
 		"""
 		self._TemperatureOut = OpenRTM_aist.OutPort("Temperature", self._d_temp)
@@ -94,7 +100,7 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 		self._Analog_port = [0]
 		
 		# </rtc-template>
-
+                self._spi = spidev.SpiDev()
 
 		 
 	##
@@ -173,7 +179,8 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onActivated(self, ec_id):
-	
+	        
+                self._spi.open(0,0)
 		return RTC.RTC_OK
 	
 		##
@@ -187,7 +194,7 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onDeactivated(self, ec_id):
-	
+	        self._spi.close()
 		return RTC.RTC_OK
 	
 		##
@@ -201,7 +208,14 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onExecute(self, ec_id):
-	
+	        data = self.readadc(0)
+                volt = self.arduino_map(data, 0, 1023, 0, 5000)
+                temp = self.arduino_map(volt, 300, 1600, -30, 100)
+
+                print ("temp : {:8}".format(temp))
+                
+                self._d_temp.data = temp
+                self._TemperatureOut.write()
 		return RTC.RTC_OK
 	
 	#	##
@@ -274,7 +288,14 @@ class AnalogTemp(OpenRTM_aist.DataFlowComponentBase):
 	#def onRateChanged(self, ec_id):
 	#
 	#	return RTC.RTC_OK
-	
+	def readadc(self,channel):
+            adc = self._spi.xfer2([1,(8+channel)<<4,0])
+            data = ((adc[1]&3) << 8) + adc[2]
+            return data
+
+        def arduino_map(self, x, in_min, in_max, out_min, out_max):
+            return (x - in_min)*(out_max - out_min) // (in_max - in_min) + out_min
+
 
 
 
