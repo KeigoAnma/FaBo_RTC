@@ -276,7 +276,7 @@ class Light(OpenRTM_aist.DataFlowComponentBase):
 	#
 	#	return RTC.RTC_OK
 	def readadc(self, channel):
-		adc = spi.xfer2([1,(8+channel)<<4,0])
+		adc = self._spi.xfer2([1,(8+channel)<<4,0])
 		data = ((adc[1]&3) << 8) + adc[2]
 		return data
 
