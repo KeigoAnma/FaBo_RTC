@@ -1,0 +1,54 @@
+# Tilt CMake config file
+#
+# This file sets the following variables:
+# Tilt_FOUND - Always TRUE.
+# Tilt_INCLUDE_DIRS - Directories containing the Tilt include files.
+# Tilt_IDL_DIRS - Directories containing the Tilt IDL files.
+# Tilt_LIBRARIES - Libraries needed to use Tilt.
+# Tilt_DEFINITIONS - Compiler flags for Tilt.
+# Tilt_VERSION - The version of Tilt found.
+# Tilt_VERSION_MAJOR - The major version of Tilt found.
+# Tilt_VERSION_MINOR - The minor version of Tilt found.
+# Tilt_VERSION_REVISION - The revision version of Tilt found.
+# Tilt_VERSION_CANDIDATE - The candidate version of Tilt found.
+
+message(STATUS "Found Tilt-@PROJECT_VERSION@")
+set(Tilt_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Tilt_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Tilt_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Tilt_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Tilt_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Tilt_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Tilt_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Tilt_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Tilt_VERSION @PROJECT_VERSION@)
+set(Tilt_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Tilt_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Tilt_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Tilt_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
