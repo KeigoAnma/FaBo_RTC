@@ -95,7 +95,7 @@ class Proximity(OpenRTM_aist.DataFlowComponentBase):
 		# <rtc-template block="init_conf_param">
 		
 		# </rtc-template>
-		self._vncnl4010 = vcnl.VCNL4010()
+		self._vcnl4010 = vcnl.VCNL4010()
 
 		 
 	##
