@@ -207,7 +207,8 @@ class Tilt(OpenRTM_aist.DataFlowComponentBase):
 			self._d_tilt.data = 1
 		else:
 			self._d_tilt.data = 0
-
+                
+                print "Tilt = ", self._d_tilt.data
 		self._TiltOut.write()
 		return RTC.RTC_OK
 	

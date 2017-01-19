@@ -1,3 +1,15 @@
+RTC "FaBo 110 Tilt Sensor"
+
+This RTC use python library "spidev"
+Before use, please install
+
+Sensor Unit connect to GPIO port.
+
+RTC, default port number is 4 
+
+If you connect other port, change GPIO_port value on OpenRTP
+
+
 ======================================================================
   RTComponent: Tilt specificatioin
 
