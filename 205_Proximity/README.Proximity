@@ -1,3 +1,12 @@
+RTC "FaBo 205 Proximity"
+
+This RTC use python library "FaBoProximity_VCNL4010"
+Before use this, please install 
+
+pip install FaBoProximity_VCNL4010
+
+
+
 ======================================================================
   RTComponent: Proximity specificatioin
 
