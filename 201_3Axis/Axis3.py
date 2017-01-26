@@ -16,7 +16,7 @@ sys.path.append(".")
 # Import RTM module
 import RTC
 import OpenRTM_aist
-
+import FaBo3Axis_ADXL345
 
 # Import Service implementation class
 # <rtc-template block="service_impl">
@@ -48,7 +48,7 @@ axis3_spec = ["implementation_id", "Axis3",
 # @brief ModuleDescription
 # 
 # FaBo 201 3Axis sensor RTC. Get 3 Axis (x, y, and z ) and Tap
-	information(Single or Double Tap)
+#	information(Single or Double Tap)
 # 
 # Out: 3 Axis Data and Tap information
 # 
@@ -62,17 +62,20 @@ class Axis3(OpenRTM_aist.DataFlowComponentBase):
 	def __init__(self, manager):
 		OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
 
-		axis_arg = [None] * ((len(RTC._d_TimedShortSeq) - 4) / 2)
-		self._d_axis = RTC.TimedShortSeq(*axis_arg)
-		"""
+		#axis_arg = [None] * ((len(RTC._d_TimedShortSeq) - 4) / 2)
+		#self._d_axis = RTC.TimedShortSeq(*axis_arg)
+		self._d_axis = RTC.TimedShortSeq(RTC.Time(0,0),0)
+                """
 		value of Axis : x, y and z.
 		 - Type: short
 		 - Number: 3
 		"""
 		self._AxisOut = OpenRTM_aist.OutPort("Axis", self._d_axis)
-		tap_arg = [None] * ((len(RTC._d_TimedShort) - 4) / 2)
-		self._d_tap = RTC.TimedShort(*tap_arg)
-		"""
+		
+                #tap_arg = [None] * ((len(RTC._d_TimedShort) - 4) / 2)
+		#self._d_tap = RTC.TimedShort(*tap_arg)
+		self._d_tap = RTC.TimedShort(RTC.Time(0,0),0)
+                """
 		value of tap: if value 1 > get Single Tap. if value 2 > Double Tap. value 0
 		is not Tap (Default)
 		 - Type: short
@@ -88,8 +91,7 @@ class Axis3(OpenRTM_aist.DataFlowComponentBase):
 		# <rtc-template block="init_conf_param">
 		
 		# </rtc-template>
-
-
+                self.adxl345 = FaBo3Axis_ADXL345.ADXL345()
 		 
 	##
 	#
@@ -167,7 +169,8 @@ class Axis3(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onActivated(self, ec_id):
-	
+	        self.adxl345.enableTap()
+                self._d_tap.data = 0
 		return RTC.RTC_OK
 	
 		##
@@ -195,7 +198,33 @@ class Axis3(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onExecute(self, ec_id):
-	
+                
+	        tap = self.adxl345.readIntStatus()
+                axes = self.adxl345.read()
+                shortSeq = []
+
+
+                if self.adxl345.isDoubleTap(tap):
+                    print "get DoubleTap"
+                    self._d_tap.data = 2
+                elif self.adxl345.isSingleTap(tap):
+                    print "get SingleTap"
+                    self._d_tap.data = 1
+                else:
+                    print "no Tap"
+                    self._d_tap.data = 0
+                
+                shortSeq.append(axes['x'])
+                shortSeq.append(axes['y'])
+                shortSeq.append(axes['z'])
+
+                print ("x :{}, y :{}, z :{}").format(axes['x'], axes['y'], axes['z'])
+                
+                self._d_axis.data = shortSeq
+                self._AxisOut.write()
+                self._TapOut.write()
+                
+                time.sleep(0.5)
 		return RTC.RTC_OK
 	
 	#	##
