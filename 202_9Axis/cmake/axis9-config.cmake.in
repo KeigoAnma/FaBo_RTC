@@ -1,0 +1,54 @@
+# Axis9 CMake config file
+#
+# This file sets the following variables:
+# Axis9_FOUND - Always TRUE.
+# Axis9_INCLUDE_DIRS - Directories containing the Axis9 include files.
+# Axis9_IDL_DIRS - Directories containing the Axis9 IDL files.
+# Axis9_LIBRARIES - Libraries needed to use Axis9.
+# Axis9_DEFINITIONS - Compiler flags for Axis9.
+# Axis9_VERSION - The version of Axis9 found.
+# Axis9_VERSION_MAJOR - The major version of Axis9 found.
+# Axis9_VERSION_MINOR - The minor version of Axis9 found.
+# Axis9_VERSION_REVISION - The revision version of Axis9 found.
+# Axis9_VERSION_CANDIDATE - The candidate version of Axis9 found.
+
+message(STATUS "Found Axis9-@PROJECT_VERSION@")
+set(Axis9_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(Axis9_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(Axis9_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(Axis9_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(Axis9_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(Axis9_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(Axis9_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(Axis9_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(Axis9_VERSION @PROJECT_VERSION@)
+set(Axis9_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(Axis9_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(Axis9_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(Axis9_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
