@@ -16,7 +16,7 @@ sys.path.append(".")
 # Import RTM module
 import RTC
 import OpenRTM_aist
-
+import FaBo9Axis_MPU9250
 
 # Import Service implementation class
 # <rtc-template block="service_impl">
@@ -59,19 +59,24 @@ class Axis9(OpenRTM_aist.DataFlowComponentBase):
 	def __init__(self, manager):
 		OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
 
-		axis_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
-		self._d_axis = RTC.TimedFloatSeq(*axis_arg)
-		"""
+		#axis_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
+		#self._d_axis = RTC.TimedFloatSeq(*axis_arg)
+		self._d_axis = RTC.TimedFloatSeq(RTC.Time(0,0),0)
+                """
 		"""
 		self._3AxisOut = OpenRTM_aist.OutPort("3Axis", self._d_axis)
-		gyro_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
-		self._d_gyro = RTC.TimedFloatSeq(*gyro_arg)
-		"""
+		
+                #gyro_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
+		#self._d_gyro = RTC.TimedFloatSeq(*gyro_arg)
+		self._d_gyro = RTC.TimedFloatSeq(RTC.Time(0,0),0)
+                """
 		"""
 		self._3GyroOut = OpenRTM_aist.OutPort("3Gyro", self._d_gyro)
-		mag_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
-		self._d_mag = RTC.TimedFloatSeq(*mag_arg)
-		"""
+		
+                #mag_arg = [None] * ((len(RTC._d_TimedFloatSeq) - 4) / 2)
+		#self._d_mag = RTC.TimedFloatSeq(*mag_arg)
+		self._d_mag = RTC.TimedFloatSeq(RTC.Time(0,0),0)
+                """
 		"""
 		self._3MagOut = OpenRTM_aist.OutPort("3Mag", self._d_mag)
 
@@ -84,7 +89,7 @@ class Axis9(OpenRTM_aist.DataFlowComponentBase):
 		
 		# </rtc-template>
 
-
+                self.mpu = FaBo9Axis_MPU9250.MPU9250()
 		 
 	##
 	#
@@ -191,7 +196,37 @@ class Axis9(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onExecute(self, ec_id):
-	
+	    
+                axisSeq = []
+                gyroSeq = []
+                magSeq = []
+                
+                accel = self.mpu.readAccel()
+                gyro =self.mpu.readGyro()
+                mag = self.mpu.readMagnet()
+
+                axisSeq.append(accel['x'])
+                axisSeq.append(accel['y'])
+                axisSeq.append(accel['z'])
+
+                gyroSeq.append(gyro['x'])
+                gyroSeq.append(gyro['y'])
+                gyroSeq.append(gyro['z'])
+
+                magSeq.append(mag['x'])
+                magSeq.append(mag['y'])
+                magSeq.append(mag['z'])
+                
+
+                self._d_axis.data = axisSeq
+                self._d_gyro.data = gyroSeq
+                self._d_mag.data = magSeq
+                
+                self._3AxisOut.write()
+                self._3GyroOut.write()
+                self._3MagOut.write()
+
+
 		return RTC.RTC_OK
 	
 	#	##
