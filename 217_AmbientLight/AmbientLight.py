@@ -17,6 +17,7 @@ sys.path.append(".")
 import RTC
 import OpenRTM_aist
 
+import FaBoAmbientLight_ISL29034 as ISL29034
 
 # Import Service implementation class
 # <rtc-template block="service_impl">
@@ -59,22 +60,24 @@ class AmbientLight(OpenRTM_aist.DataFlowComponentBase):
 	def __init__(self, manager):
 		OpenRTM_aist.DataFlowComponentBase.__init__(self, manager)
 
-		ambient_arg = [None] * ((len(RTC._d_TimedFloat) - 4) / 2)
-		self._d_ambient = RTC.TimedFloat(*ambient_arg)
-		"""
+		#ambient_arg = [None] * ((len(RTC._d_TimedFloat) - 4) / 2)
+		#self._d_ambient = RTC.TimedFloat(*ambient_arg)
+		self._d_ambient = RTC.TimedFloat(RTC.Time(0,0),0)
+                """
 		"""
 		self._AmbientOut = OpenRTM_aist.OutPort("Ambient", self._d_ambient)
 
 
 		
-
+                
 
 		# initialize of configuration-data.
 		# <rtc-template block="init_conf_param">
 		
 		# </rtc-template>
 
-
+                #add ISL29034
+                self._isl = ISL29034.ISL29034()
 		 
 	##
 	#
@@ -179,7 +182,12 @@ class AmbientLight(OpenRTM_aist.DataFlowComponentBase):
 		#
 		#
 	def onExecute(self, ec_id):
-	
+	        lux = self._isl.read()
+                print "Lux = ",lux
+
+                self._d_ambient.data = lux
+                self._AmbientOut.write()
+
 		return RTC.RTC_OK
 	
 	#	##
