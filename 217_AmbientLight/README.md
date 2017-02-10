@@ -8,7 +8,7 @@ Please connect sensor for Raspberry Pi's I2C connector.
 **This compornet use Python Library by Fabo. Please Install.**  
 `pip install FaBoAmbientLight_ISL29034`  
 
-*Other RTC Information. Please read RREADME.Light* 
+**Other RTC Information. Please read README.Light** 
 
 
 
