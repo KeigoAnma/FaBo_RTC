@@ -1,0 +1,54 @@
+# ShowNumber CMake config file
+#
+# This file sets the following variables:
+# ShowNumber_FOUND - Always TRUE.
+# ShowNumber_INCLUDE_DIRS - Directories containing the ShowNumber include files.
+# ShowNumber_IDL_DIRS - Directories containing the ShowNumber IDL files.
+# ShowNumber_LIBRARIES - Libraries needed to use ShowNumber.
+# ShowNumber_DEFINITIONS - Compiler flags for ShowNumber.
+# ShowNumber_VERSION - The version of ShowNumber found.
+# ShowNumber_VERSION_MAJOR - The major version of ShowNumber found.
+# ShowNumber_VERSION_MINOR - The minor version of ShowNumber found.
+# ShowNumber_VERSION_REVISION - The revision version of ShowNumber found.
+# ShowNumber_VERSION_CANDIDATE - The candidate version of ShowNumber found.
+
+message(STATUS "Found ShowNumber-@PROJECT_VERSION@")
+set(ShowNumber_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(ShowNumber_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(ShowNumber_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(ShowNumber_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(ShowNumber_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(ShowNumber_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(ShowNumber_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(ShowNumber_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(ShowNumber_VERSION @PROJECT_VERSION@)
+set(ShowNumber_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(ShowNumber_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(ShowNumber_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(ShowNumber_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
